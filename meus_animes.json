@@ -1,0 +1,572 @@
+{
+    "animes": {
+        "One Piece": {
+            "capa_url": "https://m.media-amazon.com/images/M/MV5BMTNjNGU4NTUtYmVjMy00YjRiLTkxMWUtNzZkMDNiYjZhNmViXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg",
+            "total_eps": 1155,
+            "ep_atual": 168,
+            "usa_sagas": true,
+            "saga_imagens": {
+                "Saga de East Blue": "https://towercitymediavideo.wordpress.com/wp-content/uploads/2020/01/img_1083-1.jpg",
+                "Saga de Alabasta": "https://static.wikia.nocookie.net/onepiece/images/4/4b/Arc_Alabasta.png/revision/latest?cb=20241101062635&path-prefix=id",
+                "Saga de Skypiea": "https://wallpaperaccess.com/full/9932973.jpg",
+                "Saga de Water 7": "https://criticalhits.com.br/wp-content/uploads/2023/12/Enies-Lobby.jpg",
+                "Saga de Thriller Bark": "https://static.wikia.nocookie.net/onepiece/images/f/f8/Thriller_Bark_Saga.png/revision/latest?cb=20190712154803&path-prefix=pt",
+                "Saga da Guerra das Cúpulas": "https://criticalhits.com.br/wp-content/uploads/2019/08/Marineford.webp",
+                "Saga da Ilha dos Homens-Peixe": "https://s.aficionados.com.br/imagens/image-1742_cke.jpg",
+                "Saga de Dressrosa": "https://static.wikia.nocookie.net/onepiece/images/4/4b/Dressrosa_Saga.png/revision/latest?cb=20190226175751&path-prefix=pt",
+                "Saga dos Quatro Imperadores": "https://cdn.ome.lt/Sh4RI9raynZREaYCDKQPD02QnK4=/fit-in/837x500/smart/filters:format(webp)/uploads/conteudo/fotos/wano.jpg",
+                "Saga Final": "https://preview.redd.it/final-saga-match-ups-v0-i7jtcto7dtsf1.png?width=640&crop=smart&auto=webp&s=7c390d9b8541b30239b6d429e067b757cebfbec5"
+            },
+            "arcos": [
+                {
+                    "nome": "Arco Romance Dawn",
+                    "saga": "Saga de East Blue",
+                    "imagem_arco": "https://static.wikia.nocookie.net/onepiece/images/9/90/Romance_Dawn_Arc.png/revision/latest?cb=20230527232506",
+                    "ep_inicio": 1,
+                    "ep_fim": 3,
+                    "data_inicio": "2026-03-26",
+                    "data_fim": "2026-03-26"
+                },
+                {
+                    "nome": "Arco Orange Town",
+                    "saga": "Saga de East Blue",
+                    "imagem_arco": "https://static.wikia.nocookie.net/onepiece/images/5/5a/Orange_Town_Arc.png/revision/latest?cb=20150912131913&path-prefix=pt",
+                    "ep_inicio": 4,
+                    "ep_fim": 8,
+                    "data_inicio": "2026-03-26",
+                    "data_fim": "2026-03-26"
+                },
+                {
+                    "nome": "Arco Vila Syrup",
+                    "saga": "Saga de East Blue",
+                    "imagem_arco": "https://static.wikia.nocookie.net/onepiece/images/b/bc/Syrup_Village_Arc.png/revision/latest?cb=20250716050745&path-prefix=pt",
+                    "ep_inicio": 9,
+                    "ep_fim": 18,
+                    "data_inicio": "2026-03-28",
+                    "data_fim": "2026-03-28"
+                },
+                {
+                    "nome": "Arco Baratie",
+                    "saga": "Saga de East Blue",
+                    "imagem_arco": "https://static.wikia.nocookie.net/onepiece/images/b/b0/Baratie_Arc.png/revision/latest?cb=20240810160657&path-prefix=pt",
+                    "ep_inicio": 19,
+                    "ep_fim": 30,
+                    "data_inicio": "2026-03-29",
+                    "data_fim": "2026-04-01"
+                },
+                {
+                    "nome": "Arco Arlong Park",
+                    "saga": "Saga de East Blue",
+                    "imagem_arco": "https://static0.cbrimages.com/wordpress/wp-content/uploads/2020/06/One-Piece-Arlong-Park.jpg?q=50&fit=crop&w=825&dpr=1.5",
+                    "ep_inicio": 31,
+                    "ep_fim": 45,
+                    "data_inicio": "2026-04-01",
+                    "data_fim": "2026-04-03"
+                },
+                {
+                    "nome": "Arco Loguetown",
+                    "saga": "Saga de East Blue",
+                    "imagem_arco": "https://static.wikia.nocookie.net/onepiece/images/3/3f/Loguetown_Arc.png/revision/latest?cb=20240812155948&path-prefix=pt",
+                    "ep_inicio": 44,
+                    "ep_fim": 53,
+                    "data_inicio": "2026-04-03",
+                    "data_fim": "2026-04-06"
+                },
+                {
+                    "nome": "Arco Reverse Mountain",
+                    "saga": "Saga de Alabasta",
+                    "imagem_arco": "https://i.pinimg.com/736x/ae/a6/fc/aea6fc10f4492f7bb307f700dd73eddb.jpg",
+                    "ep_inicio": 62,
+                    "ep_fim": 63,
+                    "data_inicio": "2026-04-07",
+                    "data_fim": "2026-04-08"
+                },
+                {
+                    "nome": "Arco Whiskey Peak",
+                    "saga": "Saga de Alabasta",
+                    "imagem_arco": "https://static.wikia.nocookie.net/onepiece/images/6/6c/Whisky_Peak_Infobox.png/revision/latest?cb=20240727235811&path-prefix=pt",
+                    "ep_inicio": 64,
+                    "ep_fim": 67,
+                    "data_inicio": "2026-04-08",
+                    "data_fim": "2026-04-09"
+                },
+                {
+                    "nome": "Arco Koby e Helmeppo",
+                    "saga": "Saga de Alabasta",
+                    "imagem_arco": "https://ichef.bbci.co.uk/images/ic/1200x675/p0jltrlj.jpg",
+                    "ep_inicio": 68,
+                    "ep_fim": 69,
+                    "data_inicio": "2026-04-10",
+                    "data_fim": "2026-04-10"
+                },
+                {
+                    "nome": "Arco Little Garden",
+                    "saga": "Saga de Alabasta",
+                    "imagem_arco": "https://static.wikia.nocookie.net/onepiece/images/6/66/Chapter_117.png/revision/latest?cb=20250226002055&path-prefix=pt",
+                    "ep_inicio": 70,
+                    "ep_fim": 77,
+                    "data_inicio": "2026-04-13",
+                    "data_fim": "2026-04-15"
+                },
+                {
+                    "nome": "Arco Ilha Drum",
+                    "saga": "Saga de Alabasta",
+                    "imagem_arco": "https://static.wikia.nocookie.net/onepiece/images/3/34/Sakura_Blossoms.png/revision/latest?cb=20121118104428",
+                    "ep_inicio": 78,
+                    "ep_fim": 91,
+                    "data_inicio": "2026-04-15",
+                    "data_fim": "2026-04-23"
+                },
+                {
+                    "nome": "Arco Alabasta",
+                    "saga": "Saga de Alabasta",
+                    "imagem_arco": "https://i.redd.it/just-found-indian-location-that-makes-everything-have-a-lot-v0-1lrc9r5r29kd1.jpg?width=738&format=pjpg&auto=webp&s=948f369ee3ae7a3170387fd54a2561882c282661",
+                    "ep_inicio": 92,
+                    "ep_fim": 130,
+                    "data_inicio": "2026-04-24",
+                    "data_fim": "2026-05-26"
+                },
+                {
+                    "nome": "Arco Jaya",
+                    "saga": "Saga de Skypiea",
+                    "imagem_arco": "https://pbs.twimg.com/media/ExqJHEoXEBIQNW0.png",
+                    "ep_inicio": 144,
+                    "ep_fim": 152,
+                    "data_inicio": "2026-05-27",
+                    "data_fim": "2026-05-28"
+                },
+                {
+                    "nome": "Arco Skypiea",
+                    "saga": "Saga de Skypiea",
+                    "imagem_arco": "https://image.tmdb.org/t/p/original/ePbsFvP7SLZxMKLsHb8S7zzT55B.jpg",
+                    "ep_inicio": 153,
+                    "ep_fim": 195,
+                    "data_inicio": "2026-05-29"
+                },
+                {
+                    "nome": "Arco Long Ring Long Land",
+                    "saga": "Saga de Water 7",
+                    "imagem_arco": "https://www.otempo.com.br/content/dam/otempo/editorias/entretenimento/filmes-e-series/2023/11/entretenimento-arco-mais-odiado-de-one-piece-e-o-mais-importante-1708749330.jpeg",
+                    "ep_inicio": 207,
+                    "ep_fim": 219,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Water 7",
+                    "saga": "Saga de Water 7",
+                    "imagem_arco": "https://preview.redd.it/why-does-everyone-love-the-water-7-arc-so-much-v0-10984itcjnte1.png?width=640&crop=smart&auto=webp&s=5b2234dac07f152021697caee3028d8b33faef59",
+                    "ep_inicio": 227,
+                    "ep_fim": 263,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Enies Lobby",
+                    "saga": "Saga de Water 7",
+                    "imagem_arco": "https://pbs.twimg.com/media/GMdFz6FaUAADC-t.jpg",
+                    "ep_inicio": 264,
+                    "ep_fim": 312,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Pós-Enies Lobby",
+                    "saga": "Saga de Water 7",
+                    "imagem_arco": "https://pbs.twimg.com/media/Efaj91xXYAMSZsc.jpg",
+                    "ep_inicio": 313,
+                    "ep_fim": 325,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Thriller Bark",
+                    "saga": "Saga de Thriller Bark",
+                    "imagem_arco": null,
+                    "ep_inicio": 337,
+                    "ep_fim": 381,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Arquipélago Sabaody",
+                    "saga": "Saga da Guerra das Cúpulas",
+                    "imagem_arco": null,
+                    "ep_inicio": 385,
+                    "ep_fim": 405,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Amazon Lily",
+                    "saga": "Saga da Guerra das Cúpulas",
+                    "imagem_arco": null,
+                    "ep_inicio": 408,
+                    "ep_fim": 417,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Impel Down",
+                    "saga": "Saga da Guerra das Cúpulas",
+                    "imagem_arco": null,
+                    "ep_inicio": 422,
+                    "ep_fim": 452,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Marineford",
+                    "saga": "Saga da Guerra das Cúpulas",
+                    "imagem_arco": null,
+                    "ep_inicio": 457,
+                    "ep_fim": 489,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Pós-Guerra",
+                    "saga": "Saga da Guerra das Cúpulas",
+                    "imagem_arco": null,
+                    "ep_inicio": 490,
+                    "ep_fim": 516,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Retorno a Sabaody",
+                    "saga": "Saga da Ilha dos Homens-Peixe",
+                    "imagem_arco": null,
+                    "ep_inicio": 517,
+                    "ep_fim": 522,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Ilha dos Homens-Peixe",
+                    "saga": "Saga da Ilha dos Homens-Peixe",
+                    "imagem_arco": null,
+                    "ep_inicio": 523,
+                    "ep_fim": 574,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Punk Hazard",
+                    "saga": "Saga de Dressrosa",
+                    "imagem_arco": null,
+                    "ep_inicio": 579,
+                    "ep_fim": 625,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Dressrosa",
+                    "saga": "Saga de Dressrosa",
+                    "imagem_arco": null,
+                    "ep_inicio": 629,
+                    "ep_fim": 746,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Zou",
+                    "saga": "Saga dos Quatro Imperadores",
+                    "imagem_arco": null,
+                    "ep_inicio": 751,
+                    "ep_fim": 779,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Whole Cake Island",
+                    "saga": "Saga dos Quatro Imperadores",
+                    "imagem_arco": null,
+                    "ep_inicio": 783,
+                    "ep_fim": 877,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Reverie",
+                    "saga": "Saga dos Quatro Imperadores",
+                    "imagem_arco": null,
+                    "ep_inicio": 878,
+                    "ep_fim": 889,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco País de Wano",
+                    "saga": "Saga dos Quatro Imperadores",
+                    "imagem_arco": null,
+                    "ep_inicio": 890,
+                    "ep_fim": 1085,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Egghead",
+                    "saga": "Saga Final",
+                    "imagem_arco": null,
+                    "ep_inicio": 1086,
+                    "ep_fim": 1155,
+                    "data_inicio": null,
+                    "data_fim": null
+                },
+                {
+                    "nome": "Arco Elbaf",
+                    "saga": "Saga Final",
+                    "imagem_arco": null,
+                    "ep_inicio": 1155,
+                    "ep_fim": 9999,
+                    "data_inicio": null,
+                    "data_fim": null
+                }
+            ],
+            "resenhas": {
+                "Arco Romance Dawn": {
+                    "historia": 8.5,
+                    "animacao": 9.0,
+                    "personagens": 10.0,
+                    "worldbuilding": 9.0,
+                    "direcao": 9.0,
+                    "diversao": 9.0,
+                    "texto": "O arco de Romance Dawn, apesar de bem curto, é cheio de coisas interessantes. Assistindo de novo, eu consigo sentir um clima muito daora de como a aventura vai começar e percebe-se o quanto o Oda valoriza a questão das amizades e do companheirismo de Luffy desde esse começo.\n\nUma coisa bem legal de perceber é como ele trata de várias coisas que ele vai falar mais pra frente, já nesse início: a ambiguidade do valor de justiça, abuso de poder, companheirismo e amizade, sonhos e fazer de tudo para torná-los realidade. Essas são algumas das minhas impressões, no mais é muito legal ver esse início de novo, mais atento aos detalhes e à forma como os personagens são introduzidos na história.\n\nFalando um pouco agora sobre o Luffy nesse começo, sua personalidade já é bem transparecida, um cara super carismático, que as pessoas se espelham e acreditam, perseverante e confiante. O sonho de Luffy não é um mero desejo infantil, é uma promessa real, feita com Shanks, nos trazendo uma das primeiras cenas de impacto real do anime, ali a gente sente que ser o rei dos piratas vai muito além das riquezas e poder que Gold Roger fala em seu discurso final, Luffy vai atrás de algo que está além disso tudo, vai atrás de viver uma aventura, de se divertir... ou quem sabe algo mais importante que tudo isso.\n\nAcho muito interessante como a presença do Shanks cria um gancho emocional muito forte pro futuro, desde o início, já sonhamos com o dia que ele vai voltar pra história, que ele e Luffy vão se encontrar, trazendo ainda mais peso e interesse para jornada. \n\n\n\n\n\n\n\n\n\n\n\n\n"
+                },
+                "Arco Orange Town": {
+                    "historia": 8.0,
+                    "animacao": 9.0,
+                    "personagens": 9.0,
+                    "worldbuilding": 9.0,
+                    "direcao": 8.0,
+                    "diversao": 8.5,
+                    "texto": "Orange Town é o que eu chamaria de um começo singelo. Um arco divertido e emocionante, mas não deixa de ser isso, minha impressão é que Oda queria muito mais nos introduzir conceitos que vão ser tratados na história do que desenvolver um arco de peso que seria lembrado nessa saga.\n\nAqui vemos um pouco mais sobre as Akuma no Mi, trazida por Buggy, e o que mais me deixa intrigado, é que já podemos imaginar a variedade de poderes que esse sistema pode trazer. Isso fica ainda mais nítido pelo contraste de poderes de Luffy e Buggy, um não sofre danos físicos pois seu corpo é de borracha, mas tem um fraqueza enorme que são as lâminas, já que não se pode batê-lo, então vamos cortá-lo, enquanto o outro sofre das pancadas e socos, porém cortá-lo parece impossível, pois ele pode simplesmente se dividir. Resumindo, as Akuma no Mi trazem possibilidades infinitas para um mundo que pretende ser complexo e diverso, nos deixando ainda mais curiosos para conhecer novos usuários e poderes ainda mais diferentes e malucos, ou até mesmo roubados e apelões."
+                },
+                "Arco Vila Syrup": {
+                    "historia": 8.0,
+                    "animacao": 9.0,
+                    "personagens": 9.5,
+                    "worldbuilding": 9.0,
+                    "direcao": 7.0,
+                    "diversao": 9.0,
+                    "texto": ""
+                },
+                "Arco Baratie": {
+                    "historia": 9.5,
+                    "animacao": 9.0,
+                    "personagens": 10.0,
+                    "worldbuilding": 9.5,
+                    "direcao": 7.5,
+                    "diversao": 10.0,
+                    "texto": ""
+                },
+                "Arco Arlong Park": {
+                    "historia": 10.0,
+                    "animacao": 9.0,
+                    "personagens": 10.0,
+                    "worldbuilding": 10.0,
+                    "direcao": 7.0,
+                    "diversao": 10.0,
+                    "texto": ""
+                },
+                "Arco Loguetown": {
+                    "historia": 8.5,
+                    "animacao": 9.0,
+                    "personagens": 10.0,
+                    "worldbuilding": 10.0,
+                    "direcao": 8.0,
+                    "diversao": 10.0,
+                    "texto": ""
+                },
+                "Arco Reverse Mountain": {
+                    "historia": 8.5,
+                    "animacao": 9.0,
+                    "personagens": 9.0,
+                    "worldbuilding": 10.0,
+                    "direcao": 8.0,
+                    "diversao": 10.0,
+                    "texto": ""
+                },
+                "Arco Whiskey Peak": {
+                    "historia": 7.0,
+                    "animacao": 9.0,
+                    "personagens": 9.0,
+                    "worldbuilding": 9.0,
+                    "direcao": 8.0,
+                    "diversao": 9.0,
+                    "texto": ""
+                },
+                "Arco Koby e Helmeppo": {
+                    "historia": 8.5,
+                    "animacao": 9.0,
+                    "personagens": 9.5,
+                    "worldbuilding": 5.0,
+                    "direcao": 7.5,
+                    "diversao": 9.0,
+                    "texto": ""
+                },
+                "Arco Little Garden": {
+                    "historia": 8.5,
+                    "animacao": 9.0,
+                    "personagens": 9.5,
+                    "worldbuilding": 9.0,
+                    "direcao": 7.0,
+                    "diversao": 9.0,
+                    "texto": ""
+                },
+                "Arco Ilha Drum": {
+                    "historia": 10.0,
+                    "animacao": 9.0,
+                    "personagens": 10.0,
+                    "worldbuilding": 10.0,
+                    "direcao": 8.5,
+                    "diversao": 10.0,
+                    "texto": ""
+                },
+                "Arco Alabasta": {
+                    "historia": 8.5,
+                    "animacao": 8.0,
+                    "personagens": 9.5,
+                    "worldbuilding": 10.0,
+                    "direcao": 7.5,
+                    "diversao": 9.5,
+                    "texto": ""
+                },
+                "Arco Jaya": {
+                    "historia": 10.0,
+                    "animacao": 8.5,
+                    "personagens": 10.0,
+                    "worldbuilding": 10.0,
+                    "direcao": 9.0,
+                    "diversao": 10.0,
+                    "texto": ""
+                }
+            },
+            "data_inicio": "2026-03-26",
+            "sagas_datas": {
+                "Saga de East Blue": "2026-03-26",
+                "Saga de Alabasta": "2026-04-07",
+                "Saga de Skypiea": "2026-05-27"
+            },
+            "sagas_datas_fim": {
+                "Saga de East Blue": "2026-04-06",
+                "Saga de Alabasta": "2026-05-26"
+            }
+        },
+        "Fullmetal Alchemist: Brotherhood": {
+            "capa_url": "https://sm.ign.com/ign_br/tv/f/fullmetal-/fullmetal-alchemist-brotherhood-1_qzyx.jpg",
+            "total_eps": 64,
+            "ep_atual": 0,
+            "usa_sagas": true,
+            "saga_imagens": {},
+            "arcos": [
+                {
+                    "nome": "Arco Geral",
+                    "saga": "Saga Principal",
+                    "imagem_arco": null,
+                    "ep_inicio": 1,
+                    "ep_fim": 64
+                }
+            ],
+            "resenhas": {
+                "Arco Geral": {
+                    "historia": 9.5,
+                    "animacao": 8.0,
+                    "personagens": 9.0,
+                    "worldbuilding": 9.5,
+                    "direcao": 8.5,
+                    "diversao": 9.5,
+                    "texto": "Iniciando minhas impressões, gostei bastante de ter assistido esse anime. É possível entender a fama dele, a história é recheada de detalhes e nuances, os personagens, além de serem muito cativantes, são muito bem desenvolvidos e usados pela história, a autora não se propões a criar nenhum deles pra serem simples e de fundo, em algum momento eles vão ter uma importância para a trama. \n\nO roteiro acredito ser muito bem escrito, as falas são coerentes e os diálogos tem sentido na história, nunca deixando uma lacuna no entendimento do público, a não ser que seja uma escolha para ser resolvida depois. A direção foi muito bem feita, a história é linear e é difícil se perder na trama, entretanto me senti em alguns momentos um pouco perdido e cansado do ritmo adotado em alguns arcos, principalmente no arco de Rush Valley, por isso não acho que foi perfeita.\n\nFalando agora sobre o WorldBuilding, perfeito, sem ressalvas, todo o mapa fica preso na sua mente e os personagens interagem com ele de uma forma natural e didática, para que o público não se perca nos raciocínios e pensamentos dos personagens. A iteração de todos os elementos é muito bem feita também, os personagens sentem os reflexos do ambiente e sentem os reflexos das mudanças dele também. É isso, perfeito nesse sentido, mas não é One Piece."
+                }
+            }
+        },
+        "Black Clover": {
+            "capa_url": "https://img2.hulu.com/user/v3/artwork/f6451467-97a8-4ddf-9ae8-e9e4cbb53fc8?base_image_bucket_name=image_manager&base_image=bc1a1c50-6786-4cf7-ae75-75de958b64e1&size=458x687&format=webp",
+            "total_eps": 170,
+            "ep_atual": 170,
+            "usa_sagas": true,
+            "saga_imagens": {},
+            "arcos": [
+                {
+                    "nome": "Exame de Admissão de Cavaleiro Mágico",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://i0.wp.com/www.otakupt.com/wp-content/uploads/2017/10/Screenshot_20171024-201123.png?resize=696%2C392&ssl=1",
+                    "ep_inicio": 1,
+                    "ep_fim": 13
+                },
+                {
+                    "nome": "Exploração da Masmorra",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://preview.redd.it/ranking-the-best-black-clover-arcs-v0-d5baqr4pfeg91.jpg?width=396&format=pjpg&auto=webp&s=28908b5e11c42e4067a5336f9189f48cedb941f3",
+                    "ep_inicio": 14,
+                    "ep_fim": 19
+                },
+                {
+                    "nome": "Ataque à Capital Real",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://d14d9vp3wdof84.cloudfront.net/image/589816272436/image_vfv50obmmt313dql3umom3bv09/-S897-FWEBP",
+                    "ep_inicio": 20,
+                    "ep_fim": 27
+                },
+                {
+                    "nome": "Encontro com o Olho do Sol da Meia-Noite",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://i.pinimg.com/736x/a8/c4/5b/a8c45b63ab3d7f5913a53b8b631af33b.jpg",
+                    "ep_inicio": 28,
+                    "ep_fim": 39
+                },
+                {
+                    "nome": "Templo do Fundo do Mar",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://d14d9vp3wdof84.cloudfront.net/image/589816272436/image_1hp02hjkbt0rf557dn8ipcot04/-S897-FWEBP",
+                    "ep_inicio": 40,
+                    "ep_fim": 51
+                },
+                {
+                    "nome": "Floresta das Bruxas",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://criticalhits.com.br/wp-content/uploads/2023/07/witches-forest-arc.webp",
+                    "ep_inicio": 51,
+                    "ep_fim": 65
+                },
+                {
+                    "nome": "Cavaleiros Reais",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://preview.redd.it/royal-knights-arc-colored-manga-panel-v0-l1zw1indr4751.jpg?width=640&crop=smart&auto=webp&s=55d543c0a049f23c7736072df18c6c9c9b5e78c6",
+                    "ep_inicio": 66,
+                    "ep_fim": 96
+                },
+                {
+                    "nome": "Reencarnação Élfica",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://static0.cbrimages.com/wordpress/wp-content/uploads/2024/07/the-human-elf-conflict-in-black-clover.jpg",
+                    "ep_inicio": 97,
+                    "ep_fim": 129
+                },
+                {
+                    "nome": "Crentes do Demônio",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://static.wikia.nocookie.net/blackclover/images/b/bb/Heart_Kingdom.png/revision/latest?cb=20201215224338&path-prefix=pt-br",
+                    "ep_inicio": 130,
+                    "ep_fim": 157
+                },
+                {
+                    "nome": "Luta Conjunta do Reino do Coração",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://ovicio.com.br/wp-content/uploads/2024/01/20240125-black-clover-1024x576.jpg",
+                    "ep_inicio": 158,
+                    "ep_fim": 167
+                },
+                {
+                    "nome": "Invasão do Reino de Espadas",
+                    "saga": "Saga Única",
+                    "imagem_arco": "https://assets.gamearena.gg/wp-content/uploads/2024/02/19204426/black-clover-arc.jpg",
+                    "ep_inicio": 168,
+                    "ep_fim": 170
+                }
+            ],
+            "resenhas": {}
+        }
+    }
+}
