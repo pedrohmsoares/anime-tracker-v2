@@ -1,21 +1,50 @@
 import streamlit as st
 import json
-import os
-import requests # NOVO: Biblioteca para consumir a API do AniList
+import requests
 from datetime import datetime, date
+from google.cloud import firestore
+from google.oauth2 import service_account
 
-ARQUIVO_DADOS = 'meus_animes.json'
+# --- CONFIGURAÇÃO DA BASE DE DADOS NA NUVEM (FIRESTORE) ---
+@st.cache_resource
+def init_db():
+    try:
+        # Lê a chave secreta que configuraste no Streamlit Cloud
+        key_dict = json.loads(st.secrets["firebase"])
+        creds = service_account.Credentials.from_service_account_info(key_dict)
+        return firestore.Client(credentials=creds, project=key_dict["project_id"])
+    except Exception as e:
+        st.error("Aviso: Chave do Firebase não encontrada ou inválida. O site não conseguirá guardar os dados na nuvem.")
+        return None
+
+db = init_db()
+
+# Caminho onde os teus dados ficarão guardados no Firestore
+if db:
+    DOC_REF = db.collection("tracker_data").document("meus_animes")
+else:
+    DOC_REF = None
 
 def carregar_dados():
-    if os.path.exists(ARQUIVO_DADOS):
-        with open(ARQUIVO_DADOS, 'r', encoding='utf-8') as f:
-            return json.load(f)
+    if DOC_REF:
+        try:
+            doc = DOC_REF.get()
+            if doc.exists:
+                return doc.to_dict()
+            return {"animes": {}}
+        except Exception as e:
+            st.error(f"Erro ao ler a base de dados: {e}")
+            return {"animes": {}}
     return {"animes": {}}
 
 def salvar_dados(dados):
-    with open(ARQUIVO_DADOS, 'w', encoding='utf-8') as f:
-        json.dump(dados, f, indent=4, ensure_ascii=False)
+    if DOC_REF:
+        try:
+            DOC_REF.set(dados)
+        except Exception as e:
+            st.error(f"Erro ao guardar na base de dados: {e}")
 
+# --- FUNÇÕES UTILITÁRIAS ---
 def classificar_nota(nota):
     if nota >= 9.0: return "⭐⭐⭐⭐⭐ Obra-prima!"
     elif nota >= 7.5: return "⭐⭐⭐⭐ Excelente!"
@@ -38,7 +67,7 @@ def formatar_data(data_str):
         return d.strftime("%d/%m/%Y")
     except:
         return data_str
-    
+
 def calcular_media_anime(anime_dict):
     resenhas = anime_dict.get("resenhas", {})
     if not resenhas:
@@ -48,7 +77,6 @@ def calcular_media_anime(anime_dict):
         soma += (notas.get("historia", 5.0) + notas.get("animacao", 5.0) + notas.get("personagens", 5.0) + notas.get("worldbuilding", 5.0) + notas.get("direcao", 5.0) + notas.get("diversao", 5.0)) / 6
     return soma / len(resenhas)
 
-# --- NOVIDADE: FUNÇÃO DA API DO ANILIST (ATUALIZADA) ---
 def buscar_anime_anilist(termo):
     url = 'https://graphql.anilist.co'
     query = '''
@@ -89,6 +117,7 @@ if 'form_capa' not in st.session_state:
 if 'form_eps' not in st.session_state:
     st.session_state.form_eps = 1
 
+# --- ESTILOS CSS ---
 st.markdown("""
 <style>
     .capa-grade { transition: transform 0.2s; }
@@ -105,6 +134,7 @@ st.markdown("""
 
 st.title("🎌 Meu Tracker de Animes")
 
+# Carrega os dados direto da nuvem
 dados = carregar_dados()
 
 aba_progresso, aba_adicionar, aba_editar, aba_resenhas, aba_resumo = st.tabs([
@@ -114,7 +144,7 @@ aba_progresso, aba_adicionar, aba_editar, aba_resenhas, aba_resumo = st.tabs([
 # --- TELA 1: MEU PROGRESSO ---
 with aba_progresso:
     st.header("Atualizar Episódio")
-    if not dados["animes"]:
+    if not dados.get("animes"):
         st.info("Nenhum anime cadastrado ainda.")
     else:
         espaco_capa_progresso = st.empty()
@@ -155,7 +185,6 @@ with aba_progresso:
             with col_txt:
                 st.markdown(f"<h4 style='margin-top: 5px; margin-bottom: 0px;'>{arco_atual_nome}</h4>", unsafe_allow_html=True)
                 
-                # --- NOVIDADE: Faltam eps ---
                 faltam_arco = ep_fim_atual - ep_atual
                 texto_faltam = f" — **Faltam {faltam_arco} eps**" if faltam_arco > 0 else " — **Arco finalizado!**"
                 st.caption(f"**Episódios:** {ep_inicio_atual} a {ep_fim_atual} ({ep_fim_atual - ep_inicio_atual + 1} eps){texto_faltam}")
@@ -246,7 +275,7 @@ with aba_progresso:
                 st.success("Datas registradas com sucesso no seu Diário!")
                 st.rerun()
 
-# --- TELA 2: ADICIONAR ANIME (INTEGRAÇÃO ANILIST) ---
+# --- TELA 2: ADICIONAR ANIME ---
 with aba_adicionar:
     st.header("Adicionar Novo Anime")
     
@@ -268,16 +297,13 @@ with aba_adicionar:
             titulo = anime['title'].get('english') or anime['title'].get('romaji')
             capa = anime['coverImage']['large']
             
-            # --- LÓGICA CORRIGIDA PARA ANIMES EM LANÇAMENTO (COMO ONE PIECE) ---
             eps = anime.get('episodes')
-            if not eps: # Se o total for vazio (null), o anime ainda está lançando
+            if not eps:
                 next_airing = anime.get('nextAiringEpisode')
                 if next_airing and next_airing.get('episode'):
-                    # Pega o próximo episódio a lançar e subtrai 1 para saber o total atual
                     eps = next_airing.get('episode') - 1
                 else:
-                    eps = 1 # Fallback de segurança
-            # -------------------------------------------------------------------
+                    eps = 1
             
             with st.container():
                 st.markdown(f'''
@@ -354,17 +380,16 @@ with aba_adicionar:
 # --- TELA 3: EDITAR ANIME ---
 with aba_editar:
     st.header("Editar ou Remover Anime")
-    if not dados["animes"]:
+    if not dados.get("animes"):
         st.info("Nenhum anime cadastrado para editar.")
     else:
         anime_para_editar = st.selectbox("Selecione o Anime para editar", list(dados["animes"].keys()), key="edit_anime")
         anime_info = dados["animes"][anime_para_editar]
         
-        # --- NOVIDADE: EXIBIÇÃO DA CAPA NA EDIÇÃO ---
+        # Exibe a capa na hora de editar
         if anime_info.get("capa_url"):
             st.markdown(f'<div><img src="{anime_info["capa_url"]}" class="img-progresso"></div>', unsafe_allow_html=True)
-        # -------------------------------------------
-        
+            
         usa_sagas_atual = anime_info.get("usa_sagas", False)
         saga_imagens_atuais = anime_info.get("saga_imagens", {})
         
@@ -451,7 +476,7 @@ with aba_editar:
 # --- TELA 4: RESENHAS E NOTAS ---
 with aba_resenhas:
     st.header("Resenhas por Arco")
-    if not dados["animes"]:
+    if not dados.get("animes"):
         st.info("Cadastre um anime primeiro.")
     else:
         anime_resenha = st.selectbox("Selecione o Anime", list(dados["animes"].keys()), key="resenha_anime")
@@ -484,10 +509,10 @@ with aba_resenhas:
 
 # --- TELA 5: VISÃO GERAL ---
 with aba_resumo:
-    if st.session_state.anime_em_destaque not in dados["animes"]:
+    if st.session_state.anime_em_destaque not in dados.get("animes", {}):
         st.session_state.anime_em_destaque = None
 
-    if not dados["animes"]:
+    if not dados.get("animes"):
         st.header("📊 Galeria de Animes")
         st.info("Sua galeria está vazia. Cadastre um anime na aba 'Adicionar'.")
     elif st.session_state.anime_em_destaque is None:
@@ -502,7 +527,7 @@ with aba_resumo:
                     anime_data = dados["animes"][nome_anime]
                     capa_anime = anime_data.get("capa_url")
                     
-                    # --- NOVIDADE: Calcula a média e desenha o selo ---
+                    # Selo com a nota média calculado em tempo real
                     media = calcular_media_anime(anime_data)
                     badge = f'<div class="badge-nota">⭐ {media:.1f}</div>' if media else ''
                     
@@ -526,7 +551,7 @@ with aba_resumo:
         
         anime = dados["animes"][anime_aberto]
         
-        # --- NOVIDADE: Selo grande na visão detalhada ---
+        # Selo da nota também na capa grande dos detalhes
         media_detalhe = calcular_media_anime(anime)
         badge_detalhe = f'<div class="badge-nota" style="font-size: 16px; top: 12px; right: 12px;">⭐ {media_detalhe:.1f}</div>' if media_detalhe else ''
         
