@@ -336,7 +336,7 @@ with aba_adicionar:
         submit = st.form_submit_button("Salvar Anime no Tracker")
         
         if submit and nome:
-            if nome in dados["animes"]:
+            if nome in dados.get("animes", {}):
                 st.error("Esse anime já está cadastrado!")
             else:
                 arcos_lista, saga_imagens, saga_atual = [], {}, "Sem Saga"
@@ -368,6 +368,10 @@ with aba_adicionar:
                             "nome": nome_arco, "saga": saga_atual if usa_sagas else None,
                             "imagem_arco": url_item, "ep_inicio": ep_inicio, "ep_fim": ep_fim
                         })
+                
+                if "animes" not in dados:
+                    dados["animes"] = {}
+                    
                 dados["animes"][nome] = {
                     "capa_url": capa_url, "total_eps": total_eps, "ep_atual": 0,
                     "usa_sagas": usa_sagas, "saga_imagens": saga_imagens, "arcos": arcos_lista, "resenhas": {}
@@ -506,7 +510,7 @@ with aba_resenhas:
                 salvar_dados(dados)
                 st.success("Resenha salva!")
 
-# --- TELA 5: VISÃO GERAL (COM EDIÇÃO RÁPIDA DE DATAS) ---
+# --- TELA 5: VISÃO GERAL ---
 with aba_resumo:
     if st.session_state.anime_em_destaque not in dados.get("animes", {}):
         st.session_state.anime_em_destaque = None
@@ -546,7 +550,7 @@ with aba_resumo:
             
         st.divider()
         
-        # --- NOVIDADE: EDIÇÃO RÁPIDA DE DATAS DO ANIME ---
+        # --- EDIÇÃO RÁPIDA DO ANIME ---
         col_tit_anime, col_edit_anime = st.columns([4, 1])
         with col_tit_anime:
             st.header(f"📊 Resumo: {anime_aberto}")
@@ -556,20 +560,26 @@ with aba_resumo:
         data_fim_anime = anime.get("data_fim")
         
         with col_edit_anime:
-            st.write("") # Espaço para alinhar com o título
+            st.write("") 
             with st.popover("✏️ Editar"):
-                st.markdown(f"**Datas do Anime**")
+                st.markdown(f"**Editar Anime**")
                 chk_ini_an = st.checkbox("Iniciado", value=bool(data_ini_anime), key=f"chk_ini_an_{anime_aberto}")
                 dt_ini_an = st.date_input("Início", value=ler_data(data_ini_anime) or hoje, key=f"dt_ini_an_{anime_aberto}") if chk_ini_an else None
                 
                 chk_fim_an = st.checkbox("Finalizado", value=bool(data_fim_anime), key=f"chk_fim_an_{anime_aberto}")
                 dt_fim_an = st.date_input("Fim", value=ler_data(data_fim_anime) or hoje, key=f"dt_fim_an_{anime_aberto}") if chk_fim_an else None
                 
-                if st.button("Salvar", key=f"btn_save_an_{anime_aberto}"):
+                nova_capa_an = st.text_input("URL da Capa Principal", value=anime.get("capa_url", ""), key=f"img_an_{anime_aberto}")
+                
+                if st.button("Salvar Anime", key=f"btn_save_an_{anime_aberto}"):
                     if dt_ini_an: dados["animes"][anime_aberto]["data_inicio"] = dt_ini_an.strftime("%Y-%m-%d")
                     else: dados["animes"][anime_aberto].pop("data_inicio", None)
                     if dt_fim_an: dados["animes"][anime_aberto]["data_fim"] = dt_fim_an.strftime("%Y-%m-%d")
                     else: dados["animes"][anime_aberto].pop("data_fim", None)
+                    
+                    if nova_capa_an: dados["animes"][anime_aberto]["capa_url"] = nova_capa_an
+                    else: dados["animes"][anime_aberto].pop("capa_url", None)
+                    
                     salvar_dados(dados)
                     st.rerun()
         # --------------------------------------------------
@@ -636,26 +646,34 @@ with aba_resumo:
                 elif saga_ini_atual: status_saga = "🟡 Em progresso"
                 else: status_saga = "⚪ Não iniciado"
                 
-                # --- NOVIDADE: EDIÇÃO RÁPIDA DE DATAS DA SAGA ---
+                # --- EDIÇÃO RÁPIDA DA SAGA ---
                 col_tit_saga, col_edit_saga = st.columns([5, 1])
                 with col_tit_saga:
                     st.subheader(f"📘 {saga}{texto_eps_saga} - {status_saga}")
                 with col_edit_saga:
-                    with st.popover("✏️"):
-                        st.markdown(f"**Datas da Saga**")
+                    with st.popover("✏️ Editar Saga"):
+                        st.markdown(f"**Editar Saga**")
                         chk_ini_sg = st.checkbox("Iniciada", value=bool(saga_ini_atual), key=f"chk_ini_sg_{saga}")
                         dt_ini_sg = st.date_input("Início", value=ler_data(saga_ini_atual) or hoje, key=f"dt_ini_sg_{saga}") if chk_ini_sg else None
                         
                         chk_fim_sg = st.checkbox("Finalizada", value=bool(saga_fim_atual), key=f"chk_fim_sg_{saga}")
                         dt_fim_sg = st.date_input("Fim", value=ler_data(saga_fim_atual) or hoje, key=f"dt_fim_sg_{saga}") if chk_fim_sg else None
                         
+                        nova_img_saga = st.text_input("URL do Banner (Saga)", value=saga_imagens.get(saga, ""), key=f"img_sg_{saga}")
+                        
                         if st.button("Salvar Saga", key=f"btn_save_sg_{saga}"):
                             if "sagas_datas" not in dados["animes"][anime_aberto]: dados["animes"][anime_aberto]["sagas_datas"] = {}
                             if "sagas_datas_fim" not in dados["animes"][anime_aberto]: dados["animes"][anime_aberto]["sagas_datas_fim"] = {}
+                            if "saga_imagens" not in dados["animes"][anime_aberto]: dados["animes"][anime_aberto]["saga_imagens"] = {}
+                            
                             if dt_ini_sg: dados["animes"][anime_aberto]["sagas_datas"][saga] = dt_ini_sg.strftime("%Y-%m-%d")
                             else: dados["animes"][anime_aberto]["sagas_datas"].pop(saga, None)
                             if dt_fim_sg: dados["animes"][anime_aberto]["sagas_datas_fim"][saga] = dt_fim_sg.strftime("%Y-%m-%d")
                             else: dados["animes"][anime_aberto]["sagas_datas_fim"].pop(saga, None)
+                            
+                            if nova_img_saga: dados["animes"][anime_aberto]["saga_imagens"][saga] = nova_img_saga
+                            else: dados["animes"][anime_aberto]["saga_imagens"].pop(saga, None)
+                            
                             salvar_dados(dados)
                             st.rerun()
                 # --------------------------------------------------
@@ -696,21 +714,27 @@ with aba_resumo:
                         else:
                             st.markdown(f"**{nome_arco}**{texto_eps_arco} • {status_arco}  \n*(Sem avaliação)*")
                             
-                        # --- NOVIDADE: EDIÇÃO RÁPIDA DE DATAS DO ARCO ---
-                        with st.popover("✏️ Editar Status"):
+                        # --- EDIÇÃO RÁPIDA DO ARCO ---
+                        with st.popover("✏️ Editar Arco"):
                             idx_arco = anime["arcos"].index(arco_dict)
-                            st.markdown(f"**Datas do Arco**")
-                            chk_ini_ar = st.checkbox("Iniciado", value=bool(arco_ini), key=f"chk_ini_ar_{idx_arco}")
-                            dt_ini_ar = st.date_input("Início", value=ler_data(arco_ini) or hoje, key=f"dt_ini_ar_{idx_arco}") if chk_ini_ar else None
+                            st.markdown(f"**Editar Arco**")
+                            chk_ini_ar = st.checkbox("Iniciado", value=bool(arco_ini), key=f"chk_ini_ar_{idx_arco}_{saga}")
+                            dt_ini_ar = st.date_input("Início", value=ler_data(arco_ini) or hoje, key=f"dt_ini_ar_{idx_arco}_{saga}") if chk_ini_ar else None
                             
-                            chk_fim_ar = st.checkbox("Finalizado", value=bool(arco_fim), key=f"chk_fim_ar_{idx_arco}")
-                            dt_fim_ar = st.date_input("Fim", value=ler_data(arco_fim) or hoje, key=f"dt_fim_ar_{idx_arco}") if chk_fim_ar else None
+                            chk_fim_ar = st.checkbox("Finalizado", value=bool(arco_fim), key=f"chk_fim_ar_{idx_arco}_{saga}")
+                            dt_fim_ar = st.date_input("Fim", value=ler_data(arco_fim) or hoje, key=f"dt_fim_ar_{idx_arco}_{saga}") if chk_fim_ar else None
                             
-                            if st.button("Salvar Arco", key=f"btn_save_ar_{idx_arco}"):
+                            nova_img_arco = st.text_input("URL da Miniatura (Arco)", value=url_arco or "", key=f"img_ar_{idx_arco}_{saga}")
+                            
+                            if st.button("Salvar Arco", key=f"btn_save_ar_{idx_arco}_{saga}"):
                                 if dt_ini_ar: dados["animes"][anime_aberto]["arcos"][idx_arco]["data_inicio"] = dt_ini_ar.strftime("%Y-%m-%d")
                                 else: dados["animes"][anime_aberto]["arcos"][idx_arco].pop("data_inicio", None)
                                 if dt_fim_ar: dados["animes"][anime_aberto]["arcos"][idx_arco]["data_fim"] = dt_fim_ar.strftime("%Y-%m-%d")
                                 else: dados["animes"][anime_aberto]["arcos"][idx_arco].pop("data_fim", None)
+                                
+                                if nova_img_arco: dados["animes"][anime_aberto]["arcos"][idx_arco]["imagem_arco"] = nova_img_arco
+                                else: dados["animes"][anime_aberto]["arcos"][idx_arco].pop("imagem_arco", None)
+                                
                                 salvar_dados(dados)
                                 st.rerun()
                         # ------------------------------------------------
