@@ -101,6 +101,32 @@ def buscar_anime_anilist(termo):
         st.error(f"Erro ao conectar com AniList: {e}")
     return []
 
+# --- NOVIDADE: BUSCA DETALHES EXTRAS PARA A ABA VISÃO GERAL ---
+@st.cache_data(ttl=3600) # Mantém em memória por 1 hora para não sobrecarregar a API
+def obter_info_extra_anilist(termo):
+    url = 'https://graphql.anilist.co'
+    query = '''
+    query ($search: String) {
+      Media(search: $search, type: ANIME) {
+        averageScore
+        episodes
+        status
+        studios(isMain: true) { nodes { name } }
+        staff { edges { role node { name { full } } } }
+        nextAiringEpisode { episode timeUntilAiring }
+      }
+    }
+    '''
+    variables = {'search': termo}
+    try:
+        response = requests.post(url, json={'query': query, 'variables': variables})
+        if response.status_code == 200:
+            return response.json()['data']['Media']
+    except Exception:
+        pass
+    return None
+# ----------------------------------------------------------------
+
 hoje = date.today()
 
 st.set_page_config(page_title="Anime Tracker Visual", page_icon="🎌", layout="centered")
@@ -123,7 +149,7 @@ st.markdown("""
     .capa-grade { transition: transform 0.2s; }
     .capa-grade:hover { transform: scale(1.02); }
     .img-grade { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 8px; margin-bottom: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
-    .img-progresso { width: 250px; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); margin-bottom: 20px; }
+    .img-progresso { width: 100%; object-fit: cover; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.2); margin-bottom: 20px; }
     .img-miniatura { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
     .wallpaper-saga { border-radius: 5px; margin-bottom: 10px; object-fit: cover; max-height: 250px; }
     .anilist-card { display: flex; align-items: center; gap: 15px; margin-bottom: 10px; padding: 10px; border-radius: 8px; background-color: rgba(255,255,255,0.05); }
@@ -152,7 +178,7 @@ with aba_progresso:
         anime_info = dados["animes"][anime_selecionado]
         
         if anime_info.get("capa_url"):
-            espaco_capa_progresso.markdown(f'<div><img src="{anime_info["capa_url"]}" class="img-progresso"></div>', unsafe_allow_html=True)
+            espaco_capa_progresso.markdown(f'<div style="width: 250px;"><img src="{anime_info["capa_url"]}" class="img-progresso"></div>', unsafe_allow_html=True)
         
         ep_atual = anime_info.get("ep_atual", 0)
         total = anime_info.get("total_eps", 1)
@@ -391,7 +417,7 @@ with aba_editar:
         anime_info = dados["animes"][anime_para_editar]
         
         if anime_info.get("capa_url"):
-            st.markdown(f'<div><img src="{anime_info["capa_url"]}" class="img-progresso"></div>', unsafe_allow_html=True)
+            st.markdown(f'<div style="width: 250px;"><img src="{anime_info["capa_url"]}" class="img-progresso"></div>', unsafe_allow_html=True)
             
         usa_sagas_atual = anime_info.get("usa_sagas", False)
         saga_imagens_atuais = anime_info.get("saga_imagens", {})
@@ -491,6 +517,8 @@ with aba_resenhas:
             arco_selecionado = st.selectbox("Selecione o Arco", nomes_arcos)
             resenhas_existentes = dados["animes"][anime_resenha].get("resenhas", {})
             resenha_atual = resenhas_existentes.get(arco_selecionado, {})
+            
+            # --- NOVIDADE: FEEDBACK DE NOTA EM TEMPO REAL ---
             col1, col2 = st.columns(2)
             with col1:
                 nota_historia = st.slider("História e Roteiro", 0.0, 10.0, float(resenha_atual.get("historia", 5.0)), step=0.5)
@@ -500,6 +528,12 @@ with aba_resenhas:
                 nota_world = st.slider("Worldbuilding", 0.0, 10.0, float(resenha_atual.get("worldbuilding", 5.0)), step=0.5)
                 nota_direcao = st.slider("Direção", 0.0, 10.0, float(resenha_atual.get("direcao", 5.0)), step=0.5)
                 nota_diversao = st.slider("Fator Pessoal (Diversão)", 0.0, 10.0, float(resenha_atual.get("diversao", 5.0)), step=0.5)
+            
+            # Calcula a média exata baseada nos ponteiros que o usuário está deslizando agora
+            media_tempo_real = (nota_historia + nota_animacao + nota_personagens + nota_world + nota_direcao + nota_diversao) / 6
+            st.info(f"**⭐ Média Atual do Arco:** {media_tempo_real:.1f}/10 - {classificar_nota(media_tempo_real)}")
+            # ------------------------------------------------
+            
             texto_resenha = st.text_area("Sua resenha", resenha_atual.get("texto", ""), height=150)
             
             if st.button("Salvar Resenha"):
@@ -550,7 +584,6 @@ with aba_resumo:
             
         st.divider()
         
-        # --- EDIÇÃO RÁPIDA DO ANIME ---
         col_tit_anime, col_edit_anime = st.columns([4, 1])
         with col_tit_anime:
             st.header(f"📊 Resumo: {anime_aberto}")
@@ -561,7 +594,7 @@ with aba_resumo:
         
         with col_edit_anime:
             st.write("") 
-            with st.popover("✏️ Editar"):
+            with st.popover("✏️ Editar Anime"):
                 st.markdown(f"**Editar Anime**")
                 chk_ini_an = st.checkbox("Iniciado", value=bool(data_ini_anime), key=f"chk_ini_an_{anime_aberto}")
                 dt_ini_an = st.date_input("Início", value=ler_data(data_ini_anime) or hoje, key=f"dt_ini_an_{anime_aberto}") if chk_ini_an else None
@@ -582,37 +615,75 @@ with aba_resumo:
                     
                     salvar_dados(dados)
                     st.rerun()
-        # --------------------------------------------------
         
+        # --- NOVIDADE: LAYOUT DIVIDIDO COM INFO DO ANILIST (TELA DE VISÃO GERAL) ---
         media_detalhe = calcular_media_anime(anime)
         badge_detalhe = f'<div class="badge-nota" style="font-size: 16px; top: 12px; right: 12px;">⭐ {media_detalhe:.1f}</div>' if media_detalhe else ''
         
-        if anime.get("capa_url"):
-            st.markdown(f'<div class="container-capa" style="width: 250px;">{badge_detalhe}<img src="{anime["capa_url"]}" class="img-progresso"></div>', unsafe_allow_html=True)
-            
-        if data_ini_anime and data_fim_anime:
-            st.markdown(f"**📅 Período:** {formatar_data(data_ini_anime)} a {formatar_data(data_fim_anime)}")
-        elif data_ini_anime:
-            st.markdown(f"**📅 Iniciado em:** {formatar_data(data_ini_anime)}")
-            
-        ep_atual = anime.get("ep_atual", 0)
-        arco_atual_nome = None
-        ep_inicio_atual, ep_fim_atual = None, None
+        col_poster, col_info = st.columns([1, 2.5]) # A coluna da direita é 2.5x maior
         
-        for arco in anime.get("arcos", []):
-            if isinstance(arco, dict):
-                ep_inicio, ep_fim = arco.get("ep_inicio"), arco.get("ep_fim")
-                if ep_inicio is not None and ep_fim is not None:
-                    if ep_inicio <= ep_atual <= ep_fim:
-                        arco_atual_nome, ep_inicio_atual, ep_fim_atual = arco["nome"], ep_inicio, ep_fim
-                        break
-        
-        if arco_atual_nome:
-            faltam_resumo = ep_fim_atual - ep_atual
-            aviso_faltam = f"Faltam **{faltam_resumo}** episódios para você fechar este arco!" if faltam_resumo > 0 else "Você já completou este arco!"
-            st.success(f"📍 **Status Atual:** Você está no **{arco_atual_nome}** ({ep_inicio_atual} a {ep_fim_atual}).  \n📺 Assistindo o ep {ep_atual}. {aviso_faltam}")
-        else:
-            st.info(f"📺 **Status Atual:** Assistindo o episódio {ep_atual} de {anime.get('total_eps', '?')}.")
+        with col_poster:
+            if anime.get("capa_url"):
+                st.markdown(f'<div class="container-capa" style="width: 100%;">{badge_detalhe}<img src="{anime["capa_url"]}" class="img-progresso" style="width: 100%;"></div>', unsafe_allow_html=True)
+                
+        with col_info:
+            with st.spinner("Buscando informações oficiais no AniList..."):
+                info_oficial = obter_info_extra_anilist(anime_aberto)
+                
+            if info_oficial:
+                st.markdown("### 🌐 Dados Oficiais (AniList)")
+                col_d1, col_d2 = st.columns(2)
+                with col_d1:
+                    nota_comunidade = info_oficial.get('averageScore')
+                    st.write(f"**⭐ Nota da Comunidade:** {nota_comunidade}%" if nota_comunidade else "**⭐ Nota da Comunidade:** N/A")
+                    
+                    estudios = info_oficial.get("studios", {}).get("nodes", [])
+                    st.write(f"**🎬 Estúdio:** {estudios[0]['name'] if estudios else 'Desconhecido'}")
+                    
+                    diretores = [edge["node"]["name"]["full"] for edge in info_oficial.get("staff", {}).get("edges", []) if edge.get("role") and "Director" in edge.get("role")]
+                    st.write(f"**🎥 Diretor:** {diretores[0] if diretores else 'Desconhecido'}")
+
+                with col_d2:
+                    status_dict = {"FINISHED": "Finalizado", "RELEASING": "Em Lançamento", "NOT_YET_RELEASED": "Não Lançado", "CANCELLED": "Cancelado", "HIATUS": "Hiato"}
+                    st.write(f"**📺 Status:** {status_dict.get(info_oficial.get('status'), 'Desconhecido')}")
+                    
+                    st.write(f"**📼 Total de Eps:** {info_oficial.get('episodes') or 'Em Andamento'}")
+                    
+                    next_ep = info_oficial.get("nextAiringEpisode")
+                    if next_ep:
+                        dias = next_ep["timeUntilAiring"] // 86400
+                        horas = (next_ep["timeUntilAiring"] % 86400) // 3600
+                        st.write(f"**⏰ Próximo Ep ({next_ep['episode']}):** em ~{dias}d {horas}h")
+            else:
+                st.info("Informações adicionais não encontradas na base de dados do AniList.")
+                
+            st.divider()
+            st.markdown("### 👤 O Seu Progresso")
+            if data_ini_anime and data_fim_anime:
+                st.write(f"**📅 Período:** {formatar_data(data_ini_anime)} a {formatar_data(data_fim_anime)}")
+            elif data_ini_anime:
+                st.write(f"**📅 Iniciado em:** {formatar_data(data_ini_anime)}")
+                
+            ep_atual = anime.get("ep_atual", 0)
+            arco_atual_nome = None
+            ep_inicio_atual, ep_fim_atual = None, None
+            
+            for arco in anime.get("arcos", []):
+                if isinstance(arco, dict):
+                    ep_inicio, ep_fim = arco.get("ep_inicio"), arco.get("ep_fim")
+                    if ep_inicio is not None and ep_fim is not None:
+                        if ep_inicio <= ep_atual <= ep_fim:
+                            arco_atual_nome, ep_inicio_atual, ep_fim_atual = arco["nome"], ep_inicio, ep_fim
+                            break
+            
+            if arco_atual_nome:
+                faltam_resumo = ep_fim_atual - ep_atual
+                aviso_faltam = f"Faltam **{faltam_resumo}** episódios para você fechar este arco!" if faltam_resumo > 0 else "Você já completou este arco!"
+                st.success(f"📍 **Status Atual:** Você está no **{arco_atual_nome}** ({ep_inicio_atual} a {ep_fim_atual}).  \n📺 Assistindo o ep {ep_atual}. {aviso_faltam}")
+            else:
+                st.info(f"📺 **Status Atual:** Assistindo o episódio {ep_atual} de {anime.get('total_eps', '?')}.")
+        # ---------------------------------------------------------------------------------
+
         st.write("") 
 
         if not anime.get("usa_sagas"):
@@ -646,7 +717,6 @@ with aba_resumo:
                 elif saga_ini_atual: status_saga = "🟡 Em progresso"
                 else: status_saga = "⚪ Não iniciado"
                 
-                # --- EDIÇÃO RÁPIDA DA SAGA ---
                 col_tit_saga, col_edit_saga = st.columns([5, 1])
                 with col_tit_saga:
                     st.subheader(f"📘 {saga}{texto_eps_saga} - {status_saga}")
@@ -676,7 +746,6 @@ with aba_resumo:
                             
                             salvar_dados(dados)
                             st.rerun()
-                # --------------------------------------------------
                 
                 if saga_ini_atual and saga_fim_atual: st.caption(f"📅 **Período da Saga:** {formatar_data(saga_ini_atual)} a {formatar_data(saga_fim_atual)}")
                 elif saga_ini_atual: st.caption(f"📅 **Saga iniciada a:** {formatar_data(saga_ini_atual)}")
@@ -714,7 +783,6 @@ with aba_resumo:
                         else:
                             st.markdown(f"**{nome_arco}**{texto_eps_arco} • {status_arco}  \n*(Sem avaliação)*")
                             
-                        # --- EDIÇÃO RÁPIDA DO ARCO ---
                         with st.popover("✏️ Editar Arco"):
                             idx_arco = anime["arcos"].index(arco_dict)
                             st.markdown(f"**Editar Arco**")
@@ -737,9 +805,7 @@ with aba_resumo:
                                 
                                 salvar_dados(dados)
                                 st.rerun()
-                        # ------------------------------------------------
                         
-                        # Exibição de Data no texto principal
                         if arco_ini and arco_fim: st.write(f"📅 *{formatar_data(arco_ini)} a {formatar_data(arco_fim)}*")
                         elif arco_ini: st.write(f"📅 *Desde {formatar_data(arco_ini)}*")
                             
