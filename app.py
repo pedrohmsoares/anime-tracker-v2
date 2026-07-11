@@ -158,7 +158,24 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-st.title("🎌 Meu Tracker de Animes")
+st.markdown("""
+<style>
+    .badge-status { padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: bold; color: white; display: inline-block; margin-bottom: 5px; }
+    .status-assistindo { background-color: #2980b9; } /* Azul */
+    .status-completo { background-color: #27ae60; }   /* Verde */
+    .status-planejando { background-color: #7f8c8d; } /* Cinza */
+</style>
+""", unsafe_allow_html=True)
+
+def obter_status_badge(ep_atual, total_eps):
+    if ep_atual == 0:
+        return '<div class="badge-status status-planejando">📅 Planejando</div>'
+    elif ep_atual >= total_eps:
+        return '<div class="badge-status status-completo">✅ Completo</div>'
+    else:
+        return '<div class="badge-status status-assistindo">📺 Assistindo</div>'
+
+st.title("🎌 Tracker de Anime do Pekas")
 
 # Carrega os dados direto da nuvem
 dados = carregar_dados()
@@ -563,18 +580,23 @@ with aba_resumo:
                     nome_anime = lista_de_animes[i + j]
                     anime_data = dados["animes"][nome_anime]
                     capa_anime = anime_data.get("capa_url")
+                    ep_atual = anime_data.get("ep_atual", 0)
+                    total_eps = anime_data.get("total_eps", 1)
                     
                     media = calcular_media_anime(anime_data)
-                    badge = f'<div class="badge-nota">⭐ {media:.1f}</div>' if media else ''
+                    badge_nota = f'<div class="badge-nota">⭐ {media:.1f}</div>' if media else ''
+                    badge_status = obter_status_badge(ep_atual, total_eps)
                     
                     with cols[j]:
                         if capa_anime:
-                            st.markdown(f'<div class="capa-grade container-capa">{badge}<img src="{capa_anime}" class="img-grade"></div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="capa-grade container-capa">{badge_nota}<img src="{capa_anime}" class="img-grade"></div>', unsafe_allow_html=True)
                         else:
                             img_placeholder = f"https://via.placeholder.com/300x450.png?text={nome_anime.replace(' ', '+')}"
-                            st.markdown(f'<div class="capa-grade container-capa">{badge}<img src="{img_placeholder}" class="img-grade"></div>', unsafe_allow_html=True)
+                            st.markdown(f'<div class="capa-grade container-capa">{badge_nota}<img src="{img_placeholder}" class="img-grade"></div>', unsafe_allow_html=True)
                         
-                        # --- NOVIDADE: Botão de Abrir e Botão de Excluir lado a lado na Galeria ---
+                        # Exibe o status aqui
+                        st.markdown(badge_status, unsafe_allow_html=True)
+                        
                         col_btn1, col_btn2 = st.columns([4, 1.5])
                         with col_btn1:
                             if st.button(nome_anime, key=f"btn_{nome_anime}", use_container_width=True):
@@ -582,7 +604,7 @@ with aba_resumo:
                                 st.rerun()
                         with col_btn2:
                             with st.popover("🗑️", use_container_width=True):
-                                st.write(f"Excluir **{nome_anime}** da lista?")
+                                st.write(f"Excluir **{nome_anime}**?")
                                 if st.button("Sim", key=f"del_{nome_anime}", type="primary", use_container_width=True):
                                     del dados["animes"][nome_anime]
                                     salvar_dados(dados)
