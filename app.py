@@ -112,7 +112,7 @@ def obter_info_extra_anilist(termo):
         episodes
         status
         studios(isMain: true) { nodes { name } }
-        staff { edges { role node { name { full } } } }
+        staff(sort: [RELEVANCE, ROLE_DESC]) { edges { role node { name { full } } } }
         nextAiringEpisode { episode timeUntilAiring }
       }
     }
@@ -573,9 +573,21 @@ with aba_resumo:
                         else:
                             img_placeholder = f"https://via.placeholder.com/300x450.png?text={nome_anime.replace(' ', '+')}"
                             st.markdown(f'<div class="capa-grade container-capa">{badge}<img src="{img_placeholder}" class="img-grade"></div>', unsafe_allow_html=True)
-                        if st.button(f"Abrir {nome_anime}", key=f"btn_{nome_anime}", use_container_width=True):
-                            st.session_state.anime_em_destaque = nome_anime
-                            st.rerun()
+                        
+                        # --- NOVIDADE: Botão de Abrir e Botão de Excluir lado a lado na Galeria ---
+                        col_btn1, col_btn2 = st.columns([4, 1.5])
+                        with col_btn1:
+                            if st.button(nome_anime, key=f"btn_{nome_anime}", use_container_width=True):
+                                st.session_state.anime_em_destaque = nome_anime
+                                st.rerun()
+                        with col_btn2:
+                            with st.popover("🗑️", use_container_width=True):
+                                st.write(f"Excluir **{nome_anime}** da lista?")
+                                if st.button("Sim", key=f"del_{nome_anime}", type="primary", use_container_width=True):
+                                    del dados["animes"][nome_anime]
+                                    salvar_dados(dados)
+                                    st.rerun()
+                        # --------------------------------------------------------------------------
     else:
         anime_aberto = st.session_state.anime_em_destaque
         if st.button("⬅️ Voltar para a Galeria"):
@@ -640,8 +652,21 @@ with aba_resumo:
                     estudios = info_oficial.get("studios", {}).get("nodes", [])
                     st.write(f"**🎬 Estúdio:** {estudios[0]['name'] if estudios else 'Desconhecido'}")
                     
-                    diretores = [edge["node"]["name"]["full"] for edge in info_oficial.get("staff", {}).get("edges", []) if edge.get("role") and "Director" in edge.get("role")]
-                    st.write(f"**🎥 Diretor:** {diretores[0] if diretores else 'Desconhecido'}")
+                    # Filtra apenas diretores cujo nome não tenha letras minúsculas seguidas, removendo dubladores da FUNimation (gambiarra que funciona!)
+                    # ou busca exatamente por cargos de direção japoneses se a API fornecer.
+                    # Mas a API do AniList retorna "Director" ou "Series Director". Vamos focar no Series Director se houver.
+                    diretores_japoneses = []
+                    for edge in info_oficial.get("staff", {}).get("edges", []):
+                        role = edge.get("role", "")
+                        # Ignora cargos como "ADR Director" que são de dublagem ocidental
+                        if ("Director" in role or "Series Director" in role) and "ADR" not in role and "Theme Song" not in role:
+                            nome_diretor = edge["node"]["name"]["full"]
+                            diretores_japoneses.append(nome_diretor)
+                    
+                    # Se não achar nada muito específico, tenta pegar o primeiro da lista que não seja ADR
+                    diretor_final = diretores_japoneses[0] if diretores_japoneses else "Desconhecido"
+                    
+                    st.write(f"**🎥 Diretor:** {diretor_final}")
 
                 with col_d2:
                     status_dict = {"FINISHED": "Finalizado", "RELEASING": "Em Lançamento", "NOT_YET_RELEASED": "Não Lançado", "CANCELLED": "Cancelado", "HIATUS": "Hiato"}
@@ -726,7 +751,7 @@ with aba_resumo:
                         chk_ini_sg = st.checkbox("Iniciada", value=bool(saga_ini_atual), key=f"chk_ini_sg_{saga}")
                         dt_ini_sg = st.date_input("Início", value=ler_data(saga_ini_atual) or hoje, key=f"dt_ini_sg_{saga}") if chk_ini_sg else None
                         
-                        chk_fim_sg = st.checkbox("Finalizada", value=bool(saga_fim_atual), key=f"chk_fim_sg_{saga}")
+                        chk_fim_sg = st.checkbox("Finalizado", value=bool(saga_fim_atual), key=f"chk_fim_sg_{saga}")
                         dt_fim_sg = st.date_input("Fim", value=ler_data(saga_fim_atual) or hoje, key=f"dt_fim_sg_{saga}") if chk_fim_sg else None
                         
                         nova_img_saga = st.text_input("URL do Banner (Saga)", value=saga_imagens.get(saga, ""), key=f"img_sg_{saga}")
